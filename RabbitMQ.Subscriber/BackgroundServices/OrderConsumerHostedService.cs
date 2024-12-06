@@ -1,7 +1,9 @@
 ﻿
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Subscriber.Models;
 using System.Text;
+using System.Text.Json;
 
 namespace RabbitMQ.Subscriber.BackgroundServices;
 
@@ -21,6 +23,9 @@ public class OrderConsumerHostedService : BackgroundService
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
+
+            var order = JsonSerializer.Deserialize<OrderDto>(message);
+            
             return Task.CompletedTask;
             //call another service
         };
